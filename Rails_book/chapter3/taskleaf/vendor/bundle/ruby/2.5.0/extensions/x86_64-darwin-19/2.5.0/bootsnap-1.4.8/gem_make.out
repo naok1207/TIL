@@ -1,0 +1,15 @@
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bootsnap-1.4.8/ext/bootsnap
+/Users/naoki/.rbenv/versions/2.5.1/bin/ruby -r ./siteconf20200824-80163-jmxbeq.rb extconf.rb
+creating Makefile
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bootsnap-1.4.8/ext/bootsnap
+make "DESTDIR=" clean
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bootsnap-1.4.8/ext/bootsnap
+make "DESTDIR="
+compiling bootsnap.c
+linking shared-object bootsnap/bootsnap.bundle
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bootsnap-1.4.8/ext/bootsnap
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 bootsnap.bundle ./.gem.20200824-80163-17j53s2/bootsnap

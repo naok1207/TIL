@@ -1,0 +1,15 @@
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bindex-0.8.1/ext/skiptrace
+/Users/naoki/.rbenv/versions/2.5.1/bin/ruby -r ./siteconf20200824-80163-uhb2b6.rb extconf.rb
+creating Makefile
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bindex-0.8.1/ext/skiptrace
+make "DESTDIR=" clean
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bindex-0.8.1/ext/skiptrace
+make "DESTDIR="
+compiling cruby.c
+linking shared-object skiptrace/internal/cruby.bundle
+
+current directory: /Users/naoki/tech_essentials/TIL/Rails_book/chapter3/taskleaf/vendor/bundle/ruby/2.5.0/gems/bindex-0.8.1/ext/skiptrace
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 cruby.bundle ./.gem.20200824-80163-32wa3h/skiptrace/internal
