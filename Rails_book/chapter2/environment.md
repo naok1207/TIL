@@ -25,10 +25,10 @@ $ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
 $ echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
 
 # rbenv 確認
-$ rbenb -v
+$ rbenv -v
 
 # ruby インストール
-$ ruby install 2.5.1
+$ rbenv install 2.5.1
 
 # ruby 確認
 $ ruby -v
