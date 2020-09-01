@@ -3,4 +3,9 @@ h1 タスクの新規登録
 .nav.justify-content-end
     = link_to '一覧', tasks_path, class: 'nav-link'
 
-= render partial: 'form', locals: {task: @task}
+- if @task.errors.present?
+    ul#error_explanation
+        - @task.errors.full_messages.each do |message|
+            li= message
+
+= render partial: 'form', locals: { task: @task }
