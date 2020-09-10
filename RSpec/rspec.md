@@ -59,3 +59,54 @@ $ bin/rails g rspec:model user
 Userなど頭の文字に続くように動詞から書き始めることで自然な文章になる
 
 
+**Factory_bot**
+gemの追加
+```
+group :development, :test do
+    gem 'factory_bot_rails', "~> 4.10.0"
+```
+
+generators設定変更
+```
+# 以下を削除
+fixtures: false
+```
+
+アプリケーションにファクトリを追加する
+```
+bin/rails g factory_bot:model user
+```
+
+userファクトリ作成
+```
+factory :user, aliases: [:owner] do # projectの関連付けが:ownerとなっているため
+    first_name "Aaron"
+    last_name "Sumner"
+    # ユニークなメールアドレスを作成
+    sequence(:email) { |n| "test#{n}@example.com" }
+    password "dottle-nouveau-pavilion-tights-furze"
+end
+```
+
+noteの作成
+```
+FactoryBot.define do
+  factory :note do
+    message "My important note."
+    association :project
+    association :user
+  end
+end
+```
+
+projectの作成
+```
+```
+
+create_listメソッド, コールバック
+```
+# 関連のモデルが必要
+trait :with_notes do
+    after(:create) { |project| create_list(:note, 5, project: project) }
+end
+```
