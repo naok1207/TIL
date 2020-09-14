@@ -110,3 +110,27 @@ trait :with_notes do
     after(:create) { |project| create_list(:note, 5, project: project) }
 end
 ```
+
+**コントローラースペック**
+生成
+```
+$ bin/rails g rspec:controller home
+```
+
+deviseのテストヘルパーを使用する
+```
+# spec/rails_helper.rbに追記
+config.include Devise::Test::ControllerHelpers, type: :controller
+```
+
+has_secure_passwordメソッドなどを使って認証機能を自分で作っている場合は、次のようにして自分でヘルパーメソッドを定義する
+```
+def sign_in(user)
+    cookies[:auth_token] = user.auth_token
+end
+```
+
+FactoryBotのファクトリからテスト用の属性値をハッシュとして作成
+```
+user_params = FactoryBot.attribute_for(:user)
+```

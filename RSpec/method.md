@@ -21,6 +21,12 @@ RSpecに存在するメソッドのようなもの
 **.to be_empty**
 変数が空かどうかを確認する。
 
+**.to be_success**
+expect(response)に対してレスポンスステータスが成功(200)か、それ以外(500など)かをチェックする。
+
+**.to have_http_status**
+expect(response)に対してレスポンスステータスが200かどうかをチェックする。
+
 ### スペックをDRYにする 
 
 **describe**
