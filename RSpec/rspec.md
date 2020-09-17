@@ -153,3 +153,24 @@ require 'capybara'
 
 $ rails g rspec:feature projects
 ```
+
+featureはscenario内に記述する
+```
+scenario "user create new project" do
+    ...
+    expect {
+        ...
+        expect(page).to have_content "..."
+        ...
+    }.to chage(user.projects, :count),by(1)
+end
+```
+
+save_and_open_page を記述することでその時点でのhtmlを取得し、ファイルを保存する
+このファイルは後に削除する必要がある
+
+jsの動作を確認する場合は以下のように記述する
+```
+scenario "..." js: true do
+end
+```
