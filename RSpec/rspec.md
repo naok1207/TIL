@@ -134,3 +134,22 @@ FactoryBotのファクトリからテスト用の属性値をハッシュとし�
 ```
 user_params = FactoryBot.attribute_for(:user)
 ```
+
+**フィーチャースペック(feature spec)**
+統合テスト
+モデルやコントローラが他のモデルやコントローラと上手く一緒に動作することを確認する
+
+導入
+```
+# Gemfile
+group :test do
+    gem 'capybara'
+end
+
+# spec/rails_helper.rb
+require 'spec_helper'
+require 'rspec/rails'
+require 'capybara'
+
+$ rails g rspec:feature projects
+```
