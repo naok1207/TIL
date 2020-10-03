@@ -44,3 +44,43 @@ end
 p= @user.avatar_path
 = image_tag @user.avatar_path
 ```
+
+## 複数画像追加
+carrierwaveを用いて複数画像を追加する際の変更点
+```
+# app/models/***.rb
+
+mount_uploader :image, ImageUploader
+=>
+mount_uploaders :images, ImageUploader
+```
+```
+# app/controllers/***_controllers.rb
+
+private
+def ***_params
+    params.require(:***).permit(:***, images: [])
+end
+```
+これらの変更のみでアップロードは可能となるが画像を以下のように読み込んでも表示されない
+
+```
+# app/views/***.html.slim
+
+- @post.images.each do |image|
+    image_tag image.url
+```
+
+**原因**
+データベースに保存される際に画像が保存されたURLを正しくimage.urlに保存できていないため
+```
+> Post.first.images
+# => ...
+    images: "[\"IMG_0756.JPG\"]",
+    ...
+```
+このように「"」が文字列として保存されてしまう
+
+**改善方法**
+モデルを作成するときにjson形式で作成する.
+`serialize :JSON`で保存データをJSONに変換する
