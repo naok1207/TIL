@@ -18,9 +18,32 @@ CSSとJSを適用することで、画像などをスライドできる機能を
 = javascript_include_tag "https://unpkg.com/swiper/swiper-bundle.min.js"
 ```
 
+**yarn での導入**
+```
+$ yarn add swiper
+$ yarn install
+```
+
+マニフェストファイルにpathを記述
+```
+# assets/javascript/application.js
+
+//= require swiper/js/swiper.js
+//= require swiper.js
+```
+```
+# assets/stylesheets/application.scss
+
+@import 'swiper/css/swiper';
+```
+
+## 注意
+バージョンが高すぎるとpathが異なりエラーが起こる可能性がある
+
 ## 参考
 [RailsでSwiperを導入する方法（Swiperは2020年7月にバージョンアップし、従来と設定方法が変わりました！）](https://qiita.com/miketa_webprgr/items/0a3845aeb5da2ed75f82#:~:text=Swiper%E3%81%A8%E3%81%AF,%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B%E3%82%82%E3%81%AE%E3%81%A7%E3%81%99%E3%80%82)
 [スライダープラグイン Swiper（v5）の使い方](https://www.webdesignleaves.com/pr/plugins/swiper_js.html)
 [公式](https://swiperjs.com/)
 [公式:Swipter入門](https://swiperjs.com/get-started/)
 [公式:SwipterAPI](https://swiperjs.com/api/)
+[swiperをyarnで導入して、画像をスライダー形式にする！](https://qiita.com/kenkentarou/items/bdf04d8ecab6a855e50f)
