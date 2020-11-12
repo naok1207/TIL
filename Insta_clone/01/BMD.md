@@ -31,7 +31,7 @@ $ yarn add bootstrap bootstrap-material-design
 ```
 # Gemfile
 
-gem 'rails-jquery'
+gem 'jquery-rails'
 gem 'popper_js'
 ```
 ```
