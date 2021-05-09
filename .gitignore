@@ -28,3 +28,6 @@
 
 # Ignore gemfile
 /taskleaf/vendor/*
+
+# Ignore Rails/rails_study
+/Rails/rails_study
