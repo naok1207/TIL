@@ -431,3 +431,140 @@ reload_author
 - 上と同じだが失敗すると例外が発生する
 
 ### belongs_toのオプション
+- `:autosave`
+- `:class_name`
+- `:counter_cashe`
+- `:dependent`
+- `:foreign_key`
+- `:primary_key`
+- `:inverse_of`
+- `:polymorphic`
+- `:touch`
+- `:validate`
+- `:optional`
+
+#### `:autosave`
+- 親オブジェクトが保存されるたびに読み込まれている全てのメンバを保存し、destroyフラグが立っているメンバを破棄
+- A -> B の関連が設定されている時 A を保存すると B も同時に保存される
+**??**
+- 一括で子要素を保存する際などに用いる？
+
+#### `:class_name`
+- 関連名から関連相手のオブジェクトが生成できない場合には`:class_name`オプションを用いてモデル名を直接指定できる
+- A -> B という名前の関係を作りたいが モデル名では A -> C の関連の場合 `A belongs_to B class_name: C`とすることができる A.C -> A.B
+```
+class Book < ApplicationRecord
+  belongs_to :author, class_name: "Patron"
+end
+```
+
+#### `:counter_cache`
+- 従属しているオブジェクトの__数__の検索効率を向上させる
+- 従来であれば`@author.books.size`の値を知るためにSQLで`COUNT(*)`クエリを実行する必要があるがカウンタキャッシュを追加することでこの呼び出しを避けることができる
+- `counter_cache: true` を `counter_cache: :count_of_books`とすることでカラム名を指定(オーバーライド)することができる
+- `belongs_to`側で指定する
+
+#### `:dependent`
+- `:destroy` オブジェクトが削除される時、関連づけられたオブジェクトの`destroy`メソッドが実行される
+- `:delete` オブジェクトが削除され時、関連付けられたオブジェクトが直接データベースから削除される. `destroy`メソッドは実行されない
+  - `has_many`と関連している`belongs_to`に対して設定してはいけない
+    - 孤立したレコードがデータベースに残る可能性がある
+
+#### `:foreign_key`
+- 外部キーを直接指定できる
+- 外部キーは事前にマイグレーションで明示的に定義する必要がある
+
+#### `:primary_key`
+- 指定したからむを主キーとして設定できる
+- usersテーブルにguidという主キーがあるとする場合外部から関連づける場合以下のようになる
+```
+class User < ApplicationRecord
+  self.primary_key = 'guid' # 主キーがguidになる
+end
+
+class Todo < ApplicationRecord
+  belongs_to :user, primary_key: 'guid'
+end
+```
+
+#### `:inverse_of`
+- 関連けの名前を指定できる
+```
+class Author < ApplicationRecord
+  has_many :books, inverse_of: :author
+end
+
+class Book < ApplicationRecord
+  belongs_to :author, inverse_of: :books
+end
+```
+
+#### `:polymorphic`
+- trueに指定するとポリモーフィック関連付けを指定できる
+
+#### `:touch`
+- saveやdestroyされた時、関連づけられたオブジェクトのupdated_atやupdated_onが更新される
+
+#### `:validate`
+- `true`関連づけられたオブジェクトが保存時に必ず検証される
+
+#### `:optional`
+- `true` 関連付けされたオブジェクトの存在性のバリデーションが実行されないようになる
+
+### `belongs_to`のスコープ
+- スコープブロックを用いてクエリをカスタマイズできる
+```
+class Book < ApplicationRecord
+  belongs_to :author, -> { where active: true }
+end
+```
+
+- `where`
+- `includes`
+- `readonly`
+- `select`
+
+#### `where`
+- 関連付けられるオブジェクトが満たすべき条件を指定する
+```rb
+class Book < ApplicationRecord
+  belongs_to :author, -> { where active: true }
+end
+```
+
+#### `includes`
+- 関連付けが行われる際にeager-loadしておきたい第二の関連付けを指定できる
+- A -> B -> C の関連付けがされている際に A -> C の関連も一緒に指定するようなもの A.B.C の呼び出しが効率化される
+- 間を挟まない直接の関連付けでは必要に応じて自動でeager-loadされるため設定する必要はない
+- @chapter.book.autorのように直接取り出す頻度が高い場合はあらかじめchapterからbookへ関連付けを行うようにauthorをあらかじめincludesしておくと、無駄なクエリが減る
+```rb
+class Chapter < ApplicationRecord
+  belongs_to :book, -> { includes :author }
+end
+
+class Book < ApplicationRecord
+  belongs_to :author
+  has_many :chapters
+end
+
+class Author < ApplicationRecord
+  has_many :books
+end
+```
+
+#### `readonly`
+- 関連付けられたオブジェクトから読み出した内容は読み出し専用になる
+- 関連ごと更新するような作業をしない場合に指定する
+
+#### `select`
+- 関連付けられたオブジェクトのデータ取り出しに使われるSQLのSELECT句を上書きする
+- デフォルトでは全てのカラムを取り出す
+- `select`を用いる場合`:foreign_key`オプションを必ず指定
+
+### 関連付けられたオブジェクトが存在するかどうかを確認
+- `association.nil?`メソッドを用いて、関連付けられたオブジェクトが存在するかどうかを確認
+```
+@book.author.nil?
+```
+
+## has_one 関連付け詳細
