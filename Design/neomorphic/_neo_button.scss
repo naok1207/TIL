@@ -1,0 +1,48 @@
+@import './theme_color';
+
+$neo-color-t: #FFFFFF;
+$neo-color-b: #D1CDC7;
+$default-color: #9fbaf3;
+
+@mixin active($color) {
+  background: linear-gradient(145deg, $color, #f0f0f0);
+}
+
+@mixin hover($color) {
+  &:hover {
+    background: linear-gradient(145deg, #f0f0f0, $color);
+  }
+}
+
+@mixin button_variant($color) {
+  @include hover($color);
+  &:active,
+  &.active {
+    @include active($color)
+  }
+}
+
+@mixin neo_button {
+  @include hover($default-color);
+
+  // &:focus,
+  // &.focus {
+
+  // }
+
+  // &.disabled,
+  // &:disabled {
+
+  // }
+
+  &:active,
+  &.active {
+    @include active($default-color);
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .neo-#{$color} {
+    @include button_variant($color);
+  }
+}

@@ -1,0 +1,23 @@
+.neo-primary:hover {
+  background: linear-gradient(145deg, #f0f0f0, primary);
+}
+
+.neo-primary:active, .neo-primary.active {
+  background: linear-gradient(145deg, primary, #f0f0f0);
+}
+
+.neo-red:hover {
+  background: linear-gradient(145deg, #f0f0f0, red);
+}
+
+.neo-red:active, .neo-red.active {
+  background: linear-gradient(145deg, red, #f0f0f0);
+}
+
+.neo-orange:hover {
+  background: linear-gradient(145deg, #f0f0f0, orange);
+}
+
+.neo-orange:active, .neo-orange.active {
+  background: linear-gradient(145deg, orange, #f0f0f0);
+}

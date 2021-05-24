@@ -1,0 +1,15 @@
+@import './theme_color.scss';
+@import './neo_button.scss';
+@import './neo_card.scss';
+
+.neo {
+  box-shadow:  -5px -5px 10px $neo-color-t,
+                5px 5px 10px $neo-color-b;
+
+  &.neo-btn {
+    @include neo_button();
+  }
+  &.neo-card {
+    @include neo_card();
+  }
+}
