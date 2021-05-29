@@ -774,3 +774,9 @@ SELECT DATE_FORMAT(ADDDATE(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01');
 -- 次月月末
 SELECT LAST_DAY(ADDDATE(CURDATE(), INTERVAL 1 MONTH));
 ```
+
+### ページング
+pages
+
+### github pages
+githubによる静的サイトのホスティングサービス
