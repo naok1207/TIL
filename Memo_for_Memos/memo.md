@@ -780,3 +780,127 @@ pages
 
 ### github pages
 githubによる静的サイトのホスティングサービス
+
+### elastic search
+[参考](https://qiita.com/windows222/items/acb89451d6744e4361a3)
+
+### search kiq
+
+### rdb と nosql
+rdbに比べnosqlは検索が爆速
+
+### markdown
+redcarpet
+commonmarker
+[参考](https://blog.piyo.tech/posts/2018-05-31-markdown-gem/)
+
+pygment
+シンタックスハイライトライブラリ
+
+[参考](https://nansystem.com/what-is-markdown-it-and-frequently-used-plugins/)
+markdown-it
+
+## markdown 実装 簡易
+### Use
+- redcarpet
+- github-markdown-css
+- generate-github-markdown-css
+- highlight.js
+
+#### redcarpet
+markdown parser
+```
+gem 'redcarpet'
+```
+
+ヘルパーを作成`markdown_helper.rb`
+```
+module MarkdownHelper
+  def markdown(content)
+    return '' unless content.present?
+    @options ||= {
+        filter_html: true,
+        autolink: true,
+        space_after_headers: true,
+        fenced_code_blocks: true,
+        underline: true,
+        highlight: true,
+        footnotes: true,
+        tables: true,
+        hard_wrap: true,
+        xhtml: true,
+        link_attributes: {rel: 'nofollow', target: "_blank"},
+        strikethrough: true
+    }
+    @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, @options)
+    @markdown.render(content).html_safe
+  end
+end
+```
+
+オプション
+- `filter_html`
+- `autolink`
+- `space_after_headers`
+- `fences_code_blocks`
+- `underline`
+- `hightlight`
+- `footnotes`
+- `tables`
+- `hard_wrap`
+- `xhtml`
+- `link_attributes`
+- `strikethrough`
+
+markdownを設置する場所に以下を追記
+```
+.markdown-body
+  = markdown @post.content
+```
+
+#### css
+- github-markdown-css
+  - githubのcssを作成するためのライブラリ
+- generate-github-markdown-css
+  - github-markdown-css を実行するためのライブラリ
+
+```
+yarn add --dev github-markdown-css
+yarn global add generate-github-markdown-css
+generate-github-markdown-css > app/javascripts/stylesheets/markdown.scss
+```
+
+`application.scss`にてimport
+```
+@import './markdown';
+```
+
+`markdown.scss`の一部変更
+```
+# 前
+.markdown-body :root {
+# 後
+:root {
+```
+
+#### highlight.js
+- syntax highlight を適用させるためのライブラリ
+```
+yarn add highlight.js
+```
+
+`packs/markdown.js`を作成し以下を追記
+```
+import hljs from 'highlight.js';
+import 'highlight.js/styles/github.css';
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelectorAll('pre code').forEach((block) => {
+    hljs.highlightBlock(block);
+  });
+});
+```
+
+目的のファイル(.html.slim)で以下を追記
+```
+= javascript_pack_tag 'markdown'
+```
