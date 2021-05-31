@@ -867,7 +867,7 @@ markdownを設置する場所に以下を追記
 ```
 yarn add --dev github-markdown-css
 yarn global add generate-github-markdown-css
-generate-github-markdown-css > app/javascripts/stylesheets/markdown.scss
+generate-github-markdown-css > app/javascript/stylesheets/markdown.scss
 ```
 
 `application.scss`にてimport
@@ -903,4 +903,36 @@ document.addEventListener('DOMContentLoaded', (event) => {
 目的のファイル(.html.slim)で以下を追記
 ```
 = javascript_pack_tag 'markdown'
+```
+
+
+`show.html.slim` でjavascriptで要素に処理を実行する際には以下の記述でいけるのですが、
+```
+document.addEventListener('DOMContentLoaded', (event) => {}
+```
+
+`update.js.slim` で ajaxにより部分変更を行った後に処理を実行することができません。
+変更を行った部分に対してjavascriptを適用させる方法ってありますか？
+
+現在 markdown の機能を作成していてajaxで更新したものに対してシンタックスハイライトを入れたいと思っています。
+
+rails-ujsを利用したajax通信でシンタックスハイライトを反映させるためには
+グローバルメソッドとして定義する必要がある(その他の方法があるかもしれません)
+```
+document.addEventListener('DOMContentLoaded', (event) => {
+  reflectHighlight();
+});
+
+function reflectHighlight() {
+  document.querySelectorAll('pre code').forEach((block) => {
+    hljs.highlightBlock(block);
+  });
+}
+
+window.reflectHighlight = reflectHighlight
+```
+`update.js.slim`
+```
+|
+  reflectHighlight();
 ```
