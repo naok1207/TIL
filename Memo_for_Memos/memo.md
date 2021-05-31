@@ -936,3 +936,23 @@ window.reflectHighlight = reflectHighlight
 |
   reflectHighlight();
 ```
+
+
+### ユーザプロフィール
+- アバター追加
+- 紹介文
+
+#### アバター追加
+- Uploader作成
+- 画像リサイズ 400x400 (サイズは使うギリギリのサイズに設定予定のため変更する可能性も)
+- default画像設定
+- rmagick
+- avatar:string
+- 本番環境ではS3を利用して画像をアップロードする様にする
+- carrierwave
+
+**gem**
+```rb
+gem 'carrierwave'
+gem 'rmagick', '4.1.2'
+```
