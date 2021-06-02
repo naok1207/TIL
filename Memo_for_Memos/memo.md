@@ -956,3 +956,9 @@ window.reflectHighlight = reflectHighlight
 gem 'carrierwave'
 gem 'rmagick', '4.1.2'
 ```
+
+本番環境ではS3に保存する様にする
+
+#### エンドポイント
+githubのエンドポイントを確認したところ
+profile関連は全て`users/:username`にまとめられていた
