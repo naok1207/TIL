@@ -962,3 +962,13 @@ gem 'rmagick', '4.1.2'
 #### エンドポイント
 githubのエンドポイントを確認したところ
 profile関連は全て`users/:username`にまとめられていた
+
+
+### ajax
+rails-utlにより`remote: true`で起こったajaxのイベントを`on ajax:success`で受け取ることができる
+```
+$("#new-form").on('ajax:success', function(e) {
+  data = e.detail[0];
+  ...
+})
+```
