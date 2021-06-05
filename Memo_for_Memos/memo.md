@@ -963,6 +963,11 @@ gem 'rmagick', '4.1.2'
 githubのエンドポイントを確認したところ
 profile関連は全て`users/:username`にまとめられていた
 
+#### 概要
+- mypageでの編集 と users#show からの編集の二つを用意
+- avatarはmypageからのみで変更を行い
+- introcuctionはusers#show 及び mypageの両方から編集できることとする
+- エンドポイントはusers#showに全てまとめ表示変更処理はjquery及びcontrollerで行う
 
 ### ajax
 rails-utlにより`remote: true`で起こったajaxのイベントを`on ajax:success`で受け取ることができる
@@ -972,3 +977,20 @@ $("#new-form").on('ajax:success', function(e) {
   ...
 })
 ```
+
+
+### vscode slim 自動インデント
+- 改行時必要なインデントにする
+- = が含まれている場合
+  - = の左右に空白があるかどうかを確認
+
+### wantedlyの検索が綺麗
+
+### タスクランナー
+
+### さすインポート
+
+### 確認画面ありのupload
+画面推移
+new -> confirm (ajax) -> create
+image_cacheを用いる
