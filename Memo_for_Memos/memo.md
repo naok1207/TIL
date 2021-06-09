@@ -994,3 +994,10 @@ $("#new-form").on('ajax:success', function(e) {
 画面推移
 new -> confirm (ajax) -> create
 image_cacheを用いる
+
+
+### button submit 無効化
+```
+button type="button"
+```
+これだけ
