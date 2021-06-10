@@ -1001,3 +1001,50 @@ image_cacheを用いる
 button type="button"
 ```
 これだけ
+
+### form オブジェクト
+[参考](https://applis.io/posts/rails-design-pattern-form-objects)
+
+
+### 検索機能実装ドキュメント
+- 全検索
+  - 公開されているメモ全体から探す方法
+- 自身検索
+  - 自分自身のカテゴリやメモ一覧内でそれ以下の階層に存在するメモやカテゴリを検索する
+- 個人検索
+  - 見ているユーザ内を検索
+
+####  form オブジェクト + ransack で 複数検索機能を作る
+##### ransack による複数検索
+[参考](https://qiita.com/EastResident/items/54047e6e85dda0418dad)
+最終コード
+```rb
+def search
+  # キーワードを空白区切りで格納
+  key_words = params[:q].split(/[\p{blank}\s]+/)
+  # rasack の grupingsに用いるハッシュを作成
+  grouping_hash = keywords.reduce({}){|hash, word| hash.merge(word => { name: word })}
+  # and繋ぎでsqlを発行し実行
+  Category.ransack({ combinator: 'and', groupings: grouping_hash, s: 'name desc' }).result
+end
+```
+
+##### form object 様に分ける
+```rb
+def own_search
+end
+
+def other_search
+
+end
+
+def whole_search
+
+end
+
+private
+def grouping_hash
+  key_words = params[:q].split(/[\p{blank}\s]+/)
+  keywords.reduce({}){|hash, word| hash.merge(word => { title: word })}
+end
+```
