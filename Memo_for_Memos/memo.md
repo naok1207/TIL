@@ -1023,9 +1023,49 @@ def search
   # キーワードを空白区切りで格納
   key_words = params[:q].split(/[\p{blank}\s]+/)
   # rasack の grupingsに用いるハッシュを作成
-  grouping_hash = keywords.reduce({}){|hash, word| hash.merge(word => { name: word })}
+  grouping_hash = keyword.each_with_index.reduce({}){|hash, (word, index)| hash.merge(index.to_s => { title_or_content_cont: word })}
   # and繋ぎでsqlを発行し実行
   Category.ransack({ combinator: 'and', groupings: grouping_hash, s: 'name desc' }).result
+end
+```
+
+実質こんな感じにパラメータを送ればいい
+```rb
+@q = Post.ransack({ combinator: 'and', groupings: {post: {title_cont: "post"}, aaa: {title_cont: "aaa"}}, s: 'title desc' })
+@q = Post.ransack({ combinator: 'and', groupings: {post: {title_cont: "post"}, aaa: {title_cont: "aaa"}}})
+Post.ransack({ combinator: 'or', groupings: {post: {title_cont: "post"}, aaa: {title_cont: "aaa"}}}).ransack({ combinator: 'or', groupings: {post: {title_cont: "post"}, aaa: {title_cont: "aaa"}}})
+
+Post.ransack({ combinator: 'and', groupings: {post: {title_cont: "post"}, ss: {title_cont: "ss"}, post: {content_cont: "post"}, ss: {content_cont: "ss"}}})
+```
+
+[参考](https://qiita.com/naoa/items/eb0062a4847ac7acd8ac)
+```
+{
+  combinator: 'and',
+  groupings: {
+    '0' => {'col1_or_col2_cont' => 'hogehoge'},
+    '1' => {'col1_or_col2_cont' => 'hogehoge'}
+  }
+}
+```
+自分
+```
+{
+  combinator: 'and',
+  groupings: {
+    '0' => {'title_or_content_cont' => 'post'},
+    '1' => {'title_or_content_cont' => 'ss'}
+  }
+}
+```
+
+
+これだとtitleとcontentの中身にそれぞれpostとaaaが入っていた場合に検索に当てはまらないためオブジェクトを生成
+```rb
+class SearchPost
+  attribute :text, :string
+
+
 end
 ```
 
@@ -1048,3 +1088,102 @@ def grouping_hash
   keywords.reduce({}){|hash, word| hash.merge(word => { title: word })}
 end
 ```
+
+#### 素のsql
+(title like keyword or content like keyword) and (title like keyword2 or content like keyword2)
+
+(A or B) and (A or B)
+
+```sql
+SELECT `posts`.* FROM `posts` WHERE (`posts`.`title` LIKE '%post%' AND `posts`.`title` LIKE '%aaa%') /* loading for inspect */ ORDER BY `posts`.`title` DESC LIMIT 11
+
+SELECT `posts`.* FROM `posts` WHERE (`posts`.`title` LIKE '%<keyword>' AND `posts`.`title` LIKE `%<keyword>%`)
+
+SELECT `posts`.* FROM `posts` WHERE (`posts`.`title` LIKE '%post%' and `posts`.`title` Like '%aaa%')
+
+SELECT `posts`.* FROM `posts` WHERE (`posts`.`title` LIKE '%post%' or `posts`.`content` LIKE '%post%') and (`posts`.`title` LIKE '%aaa%' or `posts`.`content` LIKE '%aaa%')
+
+```
+
+(A or B or C) and (A or B or C)
+```sql
+SELECT * FROM tables WHERE (tables.A or tables.B or tables.C) and (tables.A or tables.B or tables.C)
+```
+ransack
+```rb
+Post.ransack(
+  combinator: 'and',
+  groupings: {
+    '0' => {'title_or_content_cont' => 'post'},
+    '1' => {'title_or_content_cont' => 'ss'}
+  }
+).result
+```
+```rb
+Post.ransack(combinator: 'and', groupings: groupings_hash)
+```
+
+完成
+```rb
+key_word = "ruby on rails docker nginx apatch"
+# key_word = params[:q].split(/[\p{blank}\s]+/)
+key_word = key_word.split(/[\p{blank}\s]+/)
+grouping_hash = keyword.each_with_index.reduce({}){|hash, (word, index)| hash.merge(index.to_s => { title_or_content_cont: word })}
+Post.ransack({combinator: 'and', groupings: grouping_hash}).result
+```
+
+メソッド化
+```rb
+def multiple_search(matcher, key_word)
+  key_words = key_word.split(/[\p{blank}\s]+/)
+  grouping_hash = key_words.each_with_index.reduce({}){|hash, (word, index)| hash.merge(index.to_s => { matcher => word })}
+  Post.ransack({combinator: 'and', groupings: grouping_hash}).result
+end
+```
+実行文
+```rb
+key_word = "ruby on rails docker nginx apatch"
+key_word = "post aaa ss"
+multiple_search(:title_or_content_cont, key_word)
+```
+sql
+```sql
+SELECT `posts`.* FROM `posts`
+WHERE ((`posts`.`title` LIKE '%ruby%' OR `posts`.`content` LIKE '%ruby%')
+AND (`posts`.`title` LIKE '%on%' OR `posts`.`content` LIKE '%on%')
+AND (`posts`.`title` LIKE '%rails%' OR `posts`.`content` LIKE '%rails%')
+AND (`posts`.`title` LIKE '%docker%' OR `posts`.`content` LIKE '%docker%')
+AND (`posts`.`title` LIKE '%nginx%' OR `posts`.`content` LIKE '%nginx%')
+AND (`posts`.`title` LIKE '%apatch%' OR `posts`.`content` LIKE '%apatch%'))
+```
+
+### ユーザ作成時のvalidate
+ユーザ名が被らないようにチェック
+emailのvalidate
+passwordのvalidate
+
+
+```
+```
+
+```sql
+SELECT post.* FROM posts WHERE (A OR B) AND (C) OR D
+```
+
+
+### redisable
+mastodon
+
+### .env credential
+credential - master key - 保守性
+.env - 保守性が低い
+
+### docker CI に設定
+
+### aws ec2 rds
+
+### 業務職歴経歴書
+-
+
+### 使ったサービスについて
+- 決済機能ってどうやって作る？
