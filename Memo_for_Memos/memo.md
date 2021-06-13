@@ -1187,3 +1187,44 @@ credential - master key - 保守性
 
 ### 使ったサービスについて
 - 決済機能ってどうやって作る？
+
+
+### カテゴリー以下のメモ一覧の取得
+カテゴリーに`/:parent/:parent/`の様に繋げて格納する
+```
+id: 1
+under_category_ids: /
+
+id:2
+under_category_ids: /1/
+
+id:3
+under_category_ids: /2/3/
+```
+```rb
+# default
+category = Category.find(self.parent_id)
+self.under_category_ids = category.under_category_ids + category.id + '/'
+```
+
+```rb
+# categoryに関連する親カテゴリをすべ取得
+category_ids = category.under_category_ids.split("/").reject(&:blank?).map!(&:to_i).push(category.id)
+```
+
+```rb
+# 自身に関連するカテゴリを全て取得する
+# category_ids = current_user.categories.where("category_relation_ids LIKE ?", "%/#{category.id}/%").pluck(:id)
+category_ids = current_user.categories.where("under_category_ids LIKE ?", "%/#{category.id}/%").pluck(:id)
+category_ids.push(category.id)
+current_user.memos.where(category_id: category_ids)
+```
+
+
+### オーバーライドを使わないcreate
+コールバックで代替する例
+```rb
+before_create do
+  self.code = RandomString.generate(length: 8)
+end
+```
