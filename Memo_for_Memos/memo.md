@@ -1228,3 +1228,80 @@ before_create do
   self.code = RandomString.generate(length: 8)
 end
 ```
+
+### 検索 ルーティング
+```rb
+resources :memos do
+  resource :search, only: :show
+end
+resources :categories do
+  resource :search, only: :show
+end
+resources :user do
+  resource :search, only: :show
+end
+```
+```
+ category_search GET  /categories/:category_name/search(.:format) searches#show
+     memo_search GET  /memos/:memo_id/search(.:format)            searches#show
+user_memo_search GET  /:user_username/search(.:format)            searches#show
+```
+
+
+### chartjs
+色々チャートが使える
+
+### ダイレクトアップロード
+サーバーを解さずにs3にアップロードすることで高速化を図る
+
+### ActiveHash
+
+### だいそんさん formObject
+https://github.com/DaichiSaito/case_study_form_object_2/tree/develop
+
+### 検索 履歴を残す
+
+### 全てのgemの使った意味を言える様にする
+
+### ActiveStrage
+
+### コクーン
+cocoon
+[参考](https://k-koh.hatenablog.com/entry/2020/06/27/125710)
+
+### サービスクラス
+call
+excec
+run
+
+### rubocop
+[参考](https://qiita.com/ikechan515/items/3bb1f9614be0ef65268e)
+
+
+### zip 出力
+git archive HEAD --format=zip --output=exports.zip
+
+
+### デザインいい
+[参考](https://fun-technology.net/)
+[参考](futo-moriya.herokuapp.com/Portfolio/)
+
+ただの水をどう売るか
+
+### capybara
+### webdrivers
+### draper
+### decorator
+### techessential
+[気になる](https://tech-essentials.work/courses/11/tasks/27/outputs/550)
+[気になる](https://recursionist.io/)
+
+### nullを許容するのはよくない
+別テーブルにdeleted_atを作成し、削除したユーザはチェックを入れておき退会済みかどうか判別する
+
+### デットロック
+[気になる](https://blog.ingage.jp/entry/2020/03/16/080000)
+[気になる](https://qiita.com/NagaokaKenichi/items/73040df85b7bd4e9ecfc)
+
+### search reload
+urlにsearchの情報を含ませておきリロードした時に検索を走らせる
