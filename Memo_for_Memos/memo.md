@@ -905,7 +905,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 = javascript_pack_tag 'markdown'
 ```
 
-
 `show.html.slim` でjavascriptで要素に処理を実行する際には以下の記述でいけるのですが、
 ```
 document.addEventListener('DOMContentLoaded', (event) => {}
@@ -1305,3 +1304,38 @@ git archive HEAD --format=zip --output=exports.zip
 
 ### search reload
 urlにsearchの情報を含ませておきリロードした時に検索を走らせる
+
+### 実践ガイド
+
+### ルーティング
+- namespace :searches
+  - searches/contents#show
+- resource :searches or resource :searches
+  - contents#show
+
+### 検索 リロード時に情報を保持する
+[参考](https://qiita.com/nightyknite/items/b350dc95f7da089a516a)
+javascriptのhistoryを利用して検索履歴を追加した後にurlを書き換える
+parameterを設定しておきparameterがあった時のみ検索を行って表示を置き換える様にする
+
+
+### 存在チェック
+[参考](https://qiita.com/anoworl/items/8d5ff9c95c2097d6b53b)
+```
+defined? hoge #=> false
+```
+
+
+### docker webpack
+webpack専用コンテナを作成してHMRを行う
+
+### Figma
+pngなどにfillsをかけられる
+
+### 例外を起こしてデバッグ
+raiseにより例外を起こしてデバッグ操作画面を開く
+`raise ActiveRecord::rollback`?
+
+fluent d
+
+logがすぐ貯まる
