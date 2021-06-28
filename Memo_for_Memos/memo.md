@@ -1364,3 +1364,27 @@ logがすぐ貯まる
 - update の隣にチェックボックスを設置する
   - チェックボックスをつけている状態で更新を行うと完成状態に
   - チェックボックスを外している状態で更新を行うと未完成状態に
+- enum form select
+  [参考](https://morizyun.github.io/ruby/rails-function-enum-select-tag.html)
+
+### メモ公開レベル
+-
+
+### ブックマーク
+- [共同開発](https://morizyun.github.io/)
+- [js animation framework aos](https://github.com/michalsnik/aos)
+- cloudflare
+
+### typescript
+[参考](https://book.yyts.org/)
+
+### 閲覧数
+[参考](https://qiita.com/ryouzi/items/727063547da2432beda9)
+`gem 'impressionist'`
+
+### next js を利用したSPAへの移行
+next js + typescript の学習を兼ねたrailsアプリケーションのSPA化を行う
+
+
+### google api localstrage
+[参考](https://mae.chab.in/archives/2861)
