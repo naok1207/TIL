@@ -1388,3 +1388,56 @@ next js + typescript の学習を兼ねたrailsアプリケーションのSPA化
 
 ### google api localstrage
 [参考](https://mae.chab.in/archives/2861)
+
+
+### pluck hash column
+pluckする際にカラム情報を保持してハッシュを作成する
+- gem pluck_to_hash
+```
+Category.all.pluck_to_hash(:id, :name)
+```
+- mapを用いる
+```
+Category.all.pluck(:id, :name).map{ |id, name| {id: id, name: name} }
+```
+- zipを用いる
+```
+attr = %w(id name)
+Category.all.pluck(*attr).map { |p| attrs.zip(p).to_h }
+```
+
+[参考](https://zaiste.net/posts/rails-pluck-to-hash/)
+
+
+### minds 繰り返し
+```rb
+@categories.filter{|category| category[:parent_id] == nil}.each do |parent|
+  while parent.any?
+    puts "----------------"
+    puts parent
+    @categories.filter{|category| category[:parent_id] == parent[:id]}.each do |parent|
+      puts parent
+    end
+  end
+end
+```
+
+### helper moduleを用いた再帰呼び出し
+```rb
+module MindsHelper
+  def generate_minds(parent_id = nil)
+    html = ''
+    @categories.filter{|category| category[:parent_id] == parent_id}.each do |parent|
+      html += "<div class='category-group'>"
+      html += "<div class='neo mind-card'>#{parent[:name]}</div><div class='children'>"
+      html += generate_minds(parent[:id]) if @categories.any?{|category| category[:parent_id] == parent[:id]}
+      html += "<div class='memo-group'>"
+
+      html += "</div>"
+      html += "</div>"
+      html += "</div>"
+    end
+    return html.html_safe
+  end
+end
+```
