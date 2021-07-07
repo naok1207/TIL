@@ -1431,8 +1431,11 @@ module MindsHelper
       html += "<div class='category-group'>"
       html += "<div class='neo mind-card'>#{parent[:name]}</div><div class='children'>"
       html += generate_minds(parent[:id]) if @categories.any?{|category| category[:parent_id] == parent[:id]}
-      html += "<div class='memo-group'>"
-
+            html += "<div class='memo-group'>"
+      @memos.filter{|memo| memo.category_id == parent[:id]}.each do |memo|
+        html += "<div>"
+        html
+      end
       html += "</div>"
       html += "</div>"
       html += "</div>"
@@ -1441,3 +1444,62 @@ module MindsHelper
   end
 end
 ```
+
+### 後で見る
+[ポートフォリオレビュー会](https://drive.google.com/file/d/111cjQTB_LqMgIrNA6drYW0IVu0tMWhC1/view)
+
+
+### flexbox spacebeteween 最後 左寄せ
+[参考](https://blog.webcreativepark.net/2016/08/15-125202.html)
+
+#### 解決方法
+擬似要素を作成してboxを埋める
+
+```scss
+.flex_box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  &::before {
+    order: 1;
+  }
+  &::before, &::after {
+    content: '';
+    display: block;
+    width: 300px;
+  }
+}
+```
+
+### slack 例外通知
+slack notifire
+
+
+role bar
+
+
+### 追加機能
+- パンくずリスト
+- アカウントアクティベーション
+
+### 論理削除
+- deleted_at により削除日時を保存することで削除されたことを担保する
+- 論理削除の場合削除したユーザを参照するときが大変
+- 他のカラムへ削除したユーザをまるまる移動させるのもあり
+
+### OGP画像
+urlを貼り付け時に画像が表示される様になる
+meta-tags
+
+
+### 500エラー
+exceptionb_notification
+
+### パフォーマンス分析ツール
+NewRelic
+
+### rubocop 警告
+[参考](https://qiita.com/tbpgr/items/a9000c5c6fa92a46c206)
+
+### direct upload
