@@ -38,6 +38,6 @@ Rails.application.config.session_store :redis_store, {
             namespace: 'session'
         }
     ],
-    expire_after: 90.minutes
+    expire_after:
 }
 ```

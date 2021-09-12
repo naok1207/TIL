@@ -1503,3 +1503,134 @@ NewRelic
 [参考](https://qiita.com/tbpgr/items/a9000c5c6fa92a46c206)
 
 ### direct upload
+
+### rails markdown
+[参考](https://hirozak.space/posts/rails-blog)
+
+
+### meta-tags
+- default_meta_tags
+- set_meta_tags
+
+#### set_meta_tags
+- memo show set ogp
+- else no index
+
+[参考](https://qiita.com/tomomomo1217/items/912afba852dc524d748e)
+
+### clouddinary 動的 OGP
+- アカウント作成
+- asset画像追加
+- 環境変数追加
+- url生成メソッド作成
+- twitterの設定
+
+
+### 修正事項
+- meta title ja.yml title: '...' => index: '...' へ修正
+- OGP画像修正
+- 同じタグを複数持たない様に制限
+
+### docker
+[参考](https://mmtomitomimm.blogspot.com/2018/04/docker-mysqldb.html)
+[参考](https://zenn.dev/junki555/articles/13da16e4f10c9dee2bb9)
+#### mysql のみを docker-compose で起動
+Dockerfile
+```yml
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+volumes:
+  mysql:
+
+```
+command
+```
+docker-compose run db mysql -h db -P 3306 -u root
+```
+
+**ポイント**
+ホスト名とポート番号を指定してmysqlを起動すること
+
+#### mysql 設定
+```
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+```
+
+### nginx + unicorn
+[参考](https://qiita.com/E6YOteYPzmFGfOD/items/509dbabeb20bf2487283)
+
+
+### 本番環境エラー箇所
+- settings
+  - redis
+  - cloudinary
+- env
+  - RAILS_ENV
+- tmp/pids/unicorn.pid 作成
+- https://qiita.com/keiya01/items/5ea1ef8c2f70b68fde6c
+- webpacker packs manifest
+  - packs 以下に作成したjsファイル名にあったmanifestが生成される
+
+
+### nginx unicorn エラー
+エラーメッセージ全体
+```
+nginx_1  | 172.31.0.25 - - [15/Aug/2021:00:05:09 +0000] "GET / HTTP/1.1" 502 1635 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+nginx_1  | 2021/08/15 00:05:09 [error] 8#8: *1 connect() to unix:/app/tmp/sockets/.unicorn.sock failed (111: Connection refused) while connecting to upstream, client: 172.31.0.25, server: localhost, request: "GET / HTTP/1.1", upstream: "http://unix:/app/tmp/sockets/.unicorn.sock:/", host: "www.memomo.tk"
+nginx_1  | 172.31.0.25 - - [15/Aug/2021:00:05:10 +0000] "GET /favicon.ico HTTP/1.1" 200 0 "https://www.memomo.tk/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
+```
+エラーメッセージ一部抜粋
+```
+[error] 8#8: *1 connect() to unix:/app/tmp/sockets/.unicorn.sock failed (111: Connection refused)
+```
+
+ソケットがうまく繋がっていないみたい？
+->
+nginx 側ではなく rails 側の問題のようだ
+```
+$ docker-compose -f production.yml ps
+         Name                       Command               State            Ports
+-----------------------------------------------------------------------------------------
+memo_for_memos_app_1     bundle exec unicorn -p 300 ...   Exit 1
+memo_for_memos_nginx_1   /docker-entrypoint.sh /bin ...   Up       0.0.0.0:80->80/tcp
+memo_for_memos_redis_1   docker-entrypoint.sh redis ...   Up       0.0.0.0:6379->6379/tcp
+```
+
+unicornのログを調査
+```
+# log/unicorn.log
+
+bundler: failed to load command: unicorn (/usr/local/bundle/bin/unicorn)
+/usr/local/bundle/gems/unicorn-5.7.0/lib/unicorn/http_server.rb:207:in `pid=': Already running on PID:1 (or pid=/app/tmp/pids/unicorn.pid is stale) (ArgumentError)
+	from /usr/local/bundle/gems/unicorn-5.7.0/lib/unicorn/http_server.rb:139:in `start'
+	from /usr/local/bundle/gems/unicorn-5.7.0/bin/unicorn:128:in `<top (required)>'
+	from /usr/local/bundle/bin/unicorn:23:in `load'
+	from /usr/local/bundle/bin/unicorn:23:in `<top (required)>'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli/exec.rb:63:in `load'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli/exec.rb:63:in `kernel_load'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli/exec.rb:28:in `run'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli.rb:497:in `exec'
+	from /usr/local/lib/ruby/3.0.0/bundler/vendor/thor/lib/thor/command.rb:27:in `run'
+	from /usr/local/lib/ruby/3.0.0/bundler/vendor/thor/lib/thor/invocation.rb:127:in `invoke_command'
+	from /usr/local/lib/ruby/3.0.0/bundler/vendor/thor/lib/thor.rb:392:in `dispatch'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli.rb:30:in `dispatch'
+	from /usr/local/lib/ruby/3.0.0/bundler/vendor/thor/lib/thor/base.rb:485:in `start'
+	from /usr/local/lib/ruby/3.0.0/bundler/cli.rb:24:in `start'
+	from /usr/local/lib/ruby/gems/3.0.0/gems/bundler-2.2.3/libexec/bundle:49:in `block in <top (required)>'
+	from /usr/local/lib/ruby/3.0.0/bundler/friendly_errors.rb:130:in `with_friendly_errors'
+	from /usr/local/lib/ruby/gems/3.0.0/gems/bundler-2.2.3/libexec/bundle:37:in `<top (required)>'
+	from /usr/local/bin/bundle:23:in `load'
+	from /usr/local/bin/bundle:23:in `<main>'
+```
+
+unicorn.pid と .unicorn.sock を削除して assets:precompile
